@@ -1,1 +1,1 @@
-apt_src open-vm-tools
+git_src --branch 'debian/2%12.3.5-5' https://salsa.debian.org/vmware-packaging-team/pkg-open-vm-tools.git
