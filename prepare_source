@@ -1,3 +1,4 @@
 git_src --branch 'debian/2%13.0.10-1' https://salsa.debian.org/vmware-packaging-team/pkg-open-vm-tools.git
 
 import_upstream_patches
+version_suffix=gl0
