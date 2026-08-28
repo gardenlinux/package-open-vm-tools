@@ -1,0 +1,39 @@
+From 856bc0f0167c61f270d1575bc60b863cc9bd7f02 Mon Sep 17 00:00:00 2001
+From: nkraetzschmar <9020053+nkraetzschmar@users.noreply.github.com>
+Date: Fri, 28 Aug 2026 09:04:58 +0000
+Subject: [PATCH] rpcChannel: undef fortified glib alloc/free macros before
+ stub defs
+
+Newer glib makes g_malloc0/g_malloc0_n/g_free function-like macros
+(fortified with __builtin_object_size). glib_stubs.c defines no-glib
+stub functions of the same name; the macro expansion breaks the
+definitions (gmem.h:172 'expected declaration specifiers'). #undef the
+three macros before defining the stubs.
+---
+ open-vm-tools/lib/rpcChannel/glib_stubs.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/open-vm-tools/lib/rpcChannel/glib_stubs.c b/open-vm-tools/lib/rpcChannel/glib_stubs.c
+index c32deb07..22d9561d 100644
+--- a/open-vm-tools/lib/rpcChannel/glib_stubs.c
++++ b/open-vm-tools/lib/rpcChannel/glib_stubs.c
+@@ -33,6 +33,16 @@
+ #error "This file should be compiled for RPCI-only channel!"
+ #endif
+ 
++/*
++ * Newer glib turns g_malloc0/g_malloc0_n/g_free into fortified
++ * function-like macros (see gmem.h). This file provides no-glib stub
++ * *definitions* for those symbols, so the macros must be undefined first
++ * or the definitions expand the macro and fail to compile.
++ */
++#undef g_malloc0
++#undef g_malloc0_n
++#undef g_free
++
+ void *g_malloc0(size_t s) { return Util_SafeCalloc(1, s); }
+ void *g_malloc0_n(size_t n, size_t s) { return Util_SafeCalloc(n, s); }
+ void g_free(void *p) { free(p); }
+-- 
+2.47.3
+
