@@ -10,3 +10,4 @@ mkdir "$dir/src/debian"
 curl -sSLf https://snapshot.debian.org/archive/debian/20260827T082435Z/pool/main/o/open-vm-tools/open-vm-tools_13.0.10-1.1.debian.tar.xz \
 | unxz \
 | tar --extract --strip-components 1 --directory "$dir/src/debian"
+version_suffix=gl0
